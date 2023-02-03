@@ -1,33 +1,27 @@
 package bangumi_api
 
-import (
-	"fmt"
-
-	c "github.com/Stars-sea/anime_calendar/pkg/bangumi_api/collection"
-	"github.com/Stars-sea/anime_calendar/pkg/bangumi_api/images"
-	"github.com/Stars-sea/anime_calendar/pkg/bangumi_api/shared"
-)
+import "fmt"
 
 // See https://bangumi.github.io/api/
 type Subject struct {
-	ID            int               `json:"id"`
-	URL           string            `json:"url"`
-	Type          int               `json:"type"`
-	Name          string            `json:"name"`
-	NameCN        string            `json:"name_cn"`
-	Summary       string            `json:"summary"`
-	Nsfw          bool              `json:"nsfw"`
-	Locked        bool              `json:"locked"`
-	Date          string            `json:"date,omitempty"`
-	Platform      string            `json:"platform"`
-	Images        images.Images     `json:"images"`
-	Infobox       []shared.Infobox  `json:"infobox,omitempty"`
-	Volumes       int               `json:"volumes"`
-	Eps           int               `json:"eps"`
-	TotalEpisodes int               `json:"total_episodes"`
-	Rating        shared.Score      `json:"rating"`
-	Collection    c.UsersCollection `json:"collection"`
-	Tags          []shared.Tag      `json:"tags"`
+	ID            int              `json:"id"`
+	URL           string           `json:"url"`
+	Type          int              `json:"type"`
+	Name          string           `json:"name"`
+	NameCN        string           `json:"name_cn"`
+	Summary       string           `json:"summary"`
+	Nsfw          bool             `json:"nsfw"`
+	Locked        bool             `json:"locked"`
+	Date          string           `json:"date,omitempty"`
+	Platform      string           `json:"platform"`
+	Images        Images           `json:"images"`
+	Infobox       []*Infobox       `json:"infobox,omitempty"`
+	Volumes       int              `json:"volumes"`
+	Eps           int              `json:"eps"`
+	TotalEpisodes int              `json:"total_episodes"`
+	Rating        Score            `json:"rating"`
+	Collection    *UsersCollection `json:"collection"`
+	Tags          []*Tag           `json:"tags"`
 
 	AirDate    string `json:"air_date,omitempty"`
 	AirWeekday int    `json:"air_weekday,omitempty"`

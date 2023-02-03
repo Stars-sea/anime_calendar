@@ -1,4 +1,4 @@
-package shared
+package bangumi_api
 
 type Tag struct {
 	Name  string `json:"name"`
@@ -23,4 +23,9 @@ type Images struct {
 	Medium string `json:"medium"`
 	Small  string `json:"small"`
 	Grid   string `json:"grid"`
+}
+
+type CalendarRoot struct {
+	Weekday  *Weekday   `json:"weekday"`
+	Subjects []*Subject `json:"items"`
 }

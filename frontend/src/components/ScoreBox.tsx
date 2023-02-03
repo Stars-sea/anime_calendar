@@ -1,8 +1,8 @@
 import { Rate } from "antd";
-import { shared } from "../../wailsjs/go/models";
+import { bangumi_api } from "../../wailsjs/go/models";
 
 export interface ScoreBoxProps {
-    score: shared.Score
+    score: bangumi_api.Score
 }
 
 export function ScoreBox(props: ScoreBoxProps) {

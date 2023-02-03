@@ -1,4 +1,4 @@
-package shared
+package bangumi_api
 
 type Score struct {
 	Total int        `json:"total"`

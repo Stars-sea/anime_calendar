@@ -1,17 +1,17 @@
-package collection
+package bangumi_api
 
 import "fmt"
 
 // ---------- Collection Type ----------
-const (
-	CollectionWish    = 1
-	CollectionCollect = 2
-	CollectionDo      = 3
-	CollectionOnHold  = 4
-	CollectionDropped = 5
-)
+// const (
+// 	CollectionWish    = 1
+// 	CollectionCollect = 2
+// 	CollectionDo      = 3
+// 	CollectionOnHold  = 4
+// 	CollectionDropped = 5
+// )
 
-var nameTableCN = map[int]string{
+var collectionTypeNameMap = map[int]string{
 	1: "想看",
 	2: "看过",
 	3: "在看",
@@ -20,7 +20,7 @@ var nameTableCN = map[int]string{
 }
 
 func GetCollectionTypeName(ctype int) (string, error) {
-	if name, ok := nameTableCN[ctype]; ok {
+	if name, ok := collectionTypeNameMap[ctype]; ok {
 		return name, nil
 	}
 	return "", fmt.Errorf("unknown collection type %d", ctype)
