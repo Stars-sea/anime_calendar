@@ -28,19 +28,13 @@ func (b *BangumiApi) Calendar() ([]*CalendarRoot, error) {
 	return roots, nil
 }
 
-func (b *BangumiApi) GetSingelDayWithFullInfo(day uint) (*CalendarRoot, error) {
+func (b *BangumiApi) GetTimeline(day uint) (*CalendarRoot, error) {
 	roots, err := b.Calendar()
 	if err != nil {
 		return nil, err
 	}
 
-	root := roots[day-1]
-
-	for _, subject := range root.Subjects {
-		go b.GetFullSubjectInfo(subject)
-	}
-
-	return root, nil
+	return roots[day-1], nil
 }
 
 func (b *BangumiApi) GetFullSubjectInfo(s *Subject) (*Subject, error) {

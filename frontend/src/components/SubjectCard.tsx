@@ -1,6 +1,7 @@
 import { Avatar, Card } from "antd";
 import { CardSize } from "antd/es/card/Card";
 import Meta from "antd/es/card/Meta";
+import React from "react";
 import { bangumi_api } from "../../wailsjs/go/models";
 import { ScoreBox } from "./ScoreBox";
 import "./SubjectCard.css";
@@ -13,14 +14,16 @@ export interface SubjectCardProps {
     size: CardSize
 }
 
-export function SubjectCard(props: SubjectCardProps) {
-    return (
-        <Card size={props.size} >
-            <Meta
-                avatar={<Avatar shape="square" size="large" src={props.subject.images[props.image]} />}
-                title={<SubjectTitle subject={props.subject} />}
-                description={<ScoreBox score={props.subject.rating} />}
-            />
-        </Card>
-    );
-}
+export const SubjectCard: React.FC<SubjectCardProps> = ({
+    subject,
+    image = "small",
+    size = "default"
+}: SubjectCardProps) => (
+    <Card size={size} >
+        <Meta
+            avatar={<Avatar shape="square" size="large" src={subject.images[image]} />}
+            title={<SubjectTitle subject={subject} />}
+            description={<ScoreBox score={subject.rating} />}
+        />
+    </Card>
+);
