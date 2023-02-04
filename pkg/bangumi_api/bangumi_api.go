@@ -3,6 +3,13 @@ package bangumi_api
 import (
 	"encoding/json"
 	"fmt"
+
+	"github.com/Stars-sea/anime_calendar/pkg/bangumi_api/network"
+)
+
+const (
+	calendar_url       = "https://api.bgm.tv/calendar"
+	subject_detail_url = "https://api.bgm.tv/v0/subjects/%d"
 )
 
 type BangumiApi struct {
@@ -13,11 +20,11 @@ func NewBangumiApi() *BangumiApi {
 }
 
 func (b *BangumiApi) ClearCache() {
-	cache = make(map[string][]byte)
+	network.ClearCache()
 }
 
 func (b *BangumiApi) Calendar() ([]*CalendarRoot, error) {
-	data, err := GetContentFromCache(calendar_url)
+	data, err := network.GetContentFromCache(calendar_url)
 	if err != nil {
 		return nil, err
 	}
@@ -39,7 +46,7 @@ func (b *BangumiApi) GetTimeline(day uint) (*CalendarRoot, error) {
 
 func (b *BangumiApi) GetFullSubjectInfo(s *Subject) (*Subject, error) {
 	url := fmt.Sprintf(subject_detail_url, s.ID)
-	data, err := GetContentFromCache(url)
+	data, err := network.GetContentFromCache(url)
 	if err != nil {
 		return nil, err
 	}

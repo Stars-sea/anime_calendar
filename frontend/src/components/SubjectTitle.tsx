@@ -7,7 +7,7 @@ export interface SubjectTitleProps {
     subject: bangumi_api.Subject
 }
 
-export function SubjectTitle({ subject }: SubjectTitleProps) {
+export default function SubjectTitle({ subject }: SubjectTitleProps) {
     const [tag, setTag] = useState("");
     GetSubjectTypeName(subject).then(setTag);
 

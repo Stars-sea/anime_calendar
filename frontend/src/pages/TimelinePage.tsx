@@ -2,13 +2,13 @@ import { List } from "antd";
 import { useState } from "react";
 import { GetTimeline } from "../../wailsjs/go/bangumi_api/BangumiApi";
 import { bangumi_api } from "../../wailsjs/go/models";
-import { SubjectCard } from "../components/SubjectCard";
+import SubjectCard from "../components/SubjectCard";
 
 export interface TimelinePageProps {
     weekday: number
 }
 
-export function TimelinePage({ weekday }: TimelinePageProps) {
+export default function TimelinePage({ weekday }: TimelinePageProps) {
     const [loading, setLoading] = useState<boolean>(true);
     const [subjects, setSubjects] = useState<bangumi_api.CalendarRoot>();
 
@@ -30,5 +30,5 @@ export function TimelinePage({ weekday }: TimelinePageProps) {
                 </List.Item>
             }
         />
-    )
+    );
 }

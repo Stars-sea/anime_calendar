@@ -1,20 +1,12 @@
-package bangumi_api
+package network
 
 import (
 	"io"
 	"net/http"
 )
 
-const (
-	calendar_url       = "https://api.bgm.tv/calendar"
-	subject_detail_url = "https://api.bgm.tv/v0/subjects/%d"
-)
-
 // See: https://github.com/bangumi/api/blob/master/docs-raw/user%20agent.md
 const user_agent = "Stars-sea/anime_calendar"
-
-// Cache
-var cache = make(map[string][]byte)
 
 //
 // ---------- Request ----------
@@ -43,7 +35,7 @@ func GetContent(url string) ([]byte, error) {
 }
 
 func GetContentFromCache(url string) ([]byte, error) {
-	if data, ok := cache[url]; ok {
+	if data, ok := get(url); ok {
 		return data, nil
 	}
 
@@ -52,6 +44,6 @@ func GetContentFromCache(url string) ([]byte, error) {
 		return nil, err
 	}
 
-	cache[url] = data
+	put(url, data)
 	return data, nil
 }
