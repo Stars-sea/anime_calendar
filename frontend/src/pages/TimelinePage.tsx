@@ -21,7 +21,7 @@ export default function TimelinePage({ weekday }: TimelinePageProps) {
 
     return (
         <div className="subject_list">
-            <List loading={loading} grid={{ column: 1 }} dataSource={subjects?.items}
+            <List grid={{ column: 1 }} dataSource={subjects?.items}
                 renderItem={s =>
                     <List.Item>
                         <SubjectCard subject={s} size="default" image="small" />
