@@ -6,7 +6,7 @@ import CalendarPage from "./pages/CalendarPage";
 const App: React.FC = () => {
     const [inited, setInited] = useState(false);
     const [themeConfig, setThemeConfig] = useState<ThemeConfig>({
-        algorithm: theme.defaultAlgorithm
+        algorithm: theme.compactAlgorithm
     });
 
     function setTheme(themeType: boolean) {

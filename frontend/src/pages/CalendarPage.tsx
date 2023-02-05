@@ -8,7 +8,7 @@ const CalendarPage: React.FC = () => {
         token: { colorBgContainer },
     } = theme.useToken();
     const renderTabBar: TabsProps['renderTabBar'] = (props, DefaultTabBar) => (
-        <StickyBox offsetTop={0} offsetBottom={20} style={{ zIndex: 1 }}>
+        <StickyBox offsetTop={0} offsetBottom={20} style={{ zIndex: 1, marginBottom: "-16px" }}>
             <DefaultTabBar {...props} style={{ background: colorBgContainer }} />
         </StickyBox>
     );
@@ -24,6 +24,7 @@ const CalendarPage: React.FC = () => {
     return (
         <Tabs
             defaultActiveKey={(new Date().getDay() - 1).toString()}
+            style={{height: "100%"}}
             centered destroyInactiveTabPane
             renderTabBar={renderTabBar}
             items={tabs}
