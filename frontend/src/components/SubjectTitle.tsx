@@ -1,24 +1,31 @@
-import { Tag, Tooltip } from "antd";
+import { Tag } from "antd";
 import { useState } from "react";
 import { GetSubjectTypeName } from "../../wailsjs/go/bangumi_api/StructureHelper";
 import { bangumi_api } from "../../wailsjs/go/models";
-import { BrowserOpenURL } from "../../wailsjs/runtime/runtime";
+import URLText from "./URLText";
 
-export interface SubjectTitleProps {
-    subject: bangumi_api.Subject
+function getNonEmpty(first: boolean, s1: string, s2: string): string {
+    let r = first ? s1 : s2;
+    if (r.length == 0) {
+        r = first ? s2 : s1;
+    }
+    return r;
 }
 
-export default function SubjectTitle({ subject }: SubjectTitleProps) {
+export interface SubjectTitleProps {
+    subject: bangumi_api.Subject,
+    showNameCN: boolean
+}
+
+export default ({ subject, showNameCN = false }: SubjectTitleProps) => {
     const [tag, setTag] = useState("");
     GetSubjectTypeName(subject).then(setTag);
 
     return (
         <div className="subject_title">
-            <Tooltip title={subject.name_cn}>
-                <span onClick={e => e.ctrlKey && BrowserOpenURL(subject.url)}>
-                    {subject.name}
-                </span>
-            </Tooltip>
+            <URLText text={getNonEmpty(showNameCN, subject.name_cn, subject.name)}
+                     tooltip={showNameCN ? "" : subject.name_cn}
+                     url={subject.url} />
 
             <div className="subject_tags">
                 <Tag color="cyan">{tag}</Tag>

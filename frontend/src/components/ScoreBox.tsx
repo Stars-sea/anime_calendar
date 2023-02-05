@@ -8,7 +8,7 @@ export interface ScoreBoxProps {
 
 const ScoreBox: React.FC<ScoreBoxProps> = ({ score }) => (
     <span>
-        {/* TODO: 解决 Rate 组件一整行上下跳动问题, 但是加了这条注释又好了??? (什么玄学) */}
+        {/* TODO: 解决 Rate 组件一整行上下跳动问题 */}
         <Rate count={10} style={{ fontSize: 14, marginRight: 16 }}
               defaultValue={score?.score} disabled allowHalf />
         {score?.score}
