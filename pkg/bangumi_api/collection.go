@@ -2,14 +2,22 @@ package bangumi_api
 
 import "fmt"
 
+type UsersCollection struct {
+	OnHold  int `json:"on_hold,omitempty"`
+	Dropped int `json:"dropped,omitempty"`
+	Wish    int `json:"wish,omitempty"`
+	Collect int `json:"collect,omitempty"`
+	Doing   int `json:"doing,omitempty"`
+}
+
 // ---------- Collection Type ----------
-// const (
-// 	CollectionWish    = 1
-// 	CollectionCollect = 2
-// 	CollectionDo      = 3
-// 	CollectionOnHold  = 4
-// 	CollectionDropped = 5
-// )
+/*
+1 = 想看
+2 = 看过
+3 = 在看
+4 = 搁置
+5 = 抛弃
+*/
 
 var collectionTypeNameMap = map[int]string{
 	1: "想看",
@@ -24,12 +32,4 @@ func GetCollectionTypeName(ctype int) (string, error) {
 		return name, nil
 	}
 	return "", fmt.Errorf("unknown collection type %d", ctype)
-}
-
-type UsersCollection struct {
-	OnHold  int `json:"on_hold,omitempty"`
-	Dropped int `json:"dropped,omitempty"`
-	Wish    int `json:"wish,omitempty"`
-	Collect int `json:"collect,omitempty"`
-	Doing   int `json:"doing,omitempty"`
 }

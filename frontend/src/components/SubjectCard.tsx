@@ -3,6 +3,7 @@ import { CardSize } from "antd/es/card/Card";
 import Meta from "antd/es/card/Meta";
 import React from "react";
 import { bangumi_api } from "../../wailsjs/go/models";
+import SubjectDetailPage from "../pages/SubjectDetailPage";
 import ScoreBox from "./ScoreBox";
 import "./SubjectCard.css";
 import SubjectTitle from "./SubjectTitle";
@@ -12,21 +13,15 @@ export interface SubjectCardProps {
     image: "grid" | "small" | "medium" | "common" | "large",
 
     size: CardSize,
-    showOnDrawer?: ShowOnDrawer
+    showOnDrawer?: (content: DrawerProps) => void
 }
 
-export type ShowOnDrawer = (content: DrawerProps) => void;
-
-export default function SubjectCard({
-    subject,
-    image = "small",
-    size = "default",
-    showOnDrawer
-}: SubjectCardProps) {
+export default function SubjectCard({ subject, image, size, showOnDrawer }: SubjectCardProps) {
     function onClick(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
         if (showOnDrawer == undefined) return;
         showOnDrawer({
-            title: <SubjectTitle subject={subject} showNameCN={true} />
+            title: <SubjectTitle subject={subject} showNameCN={true} />,
+            children: <SubjectDetailPage subject={subject} />
         });
     }
 
@@ -34,9 +29,14 @@ export default function SubjectCard({
         <Card size={size} onClick={onClick}>
             <Meta
                 avatar={<Avatar shape="square" size="large" src={subject.images && subject.images[image]} />}
-                title={<SubjectTitle showNameCN={false} subject={subject} />}
+                title={<SubjectTitle subject={subject} />}
                 description={<ScoreBox score={subject.rating} />}
             />
         </Card>
     );
+};
+
+SubjectCard.defaultProps = {
+    image: "small",
+    size: "default"
 };

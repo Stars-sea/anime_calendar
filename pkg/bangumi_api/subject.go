@@ -28,22 +28,14 @@ type Subject struct {
 	Rank       int    `json:"rank,omitempty"`
 }
 
-func (s *Subject) GetTypeName() (string, error) {
-	if name, ok := subjectTypeNameMap[s.Type]; ok {
-		return name, nil
-	}
-
-	return "", fmt.Errorf("invalid subject type %d", s.Type)
-}
-
 // ----------  Type ----------
-// const (
-// 	Book  = 1
-// 	Anime = 2
-// 	Music = 3
-// 	Game  = 4
-// 	Real  = 6
-// )
+/*
+1 = 书籍
+2 = 动画
+3 = 音乐
+4 = 游戏
+6 = 三次元
+*/
 
 var subjectTypeNameMap = map[int]string{
 	1: "书籍",
@@ -51,4 +43,12 @@ var subjectTypeNameMap = map[int]string{
 	3: "音乐",
 	4: "游戏",
 	6: "三次元",
+}
+
+func (s *Subject) GetTypeName() (string, error) {
+	if name, ok := subjectTypeNameMap[s.Type]; ok {
+		return name, nil
+	}
+
+	return "", fmt.Errorf("invalid subject type %d", s.Type)
 }

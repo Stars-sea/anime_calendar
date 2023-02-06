@@ -7,9 +7,7 @@ export interface ClickableTitleProps {
     url: string
 }
 
-export default ({
-    text, tooltip, url
-}: ClickableTitleProps) => (
+export default ({ text, tooltip, url }: ClickableTitleProps) => (
     <Tooltip title={tooltip}>
         <span onClick={e => e.ctrlKey && BrowserOpenURL(url)}>
             {text}

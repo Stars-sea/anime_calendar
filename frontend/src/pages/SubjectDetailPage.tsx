@@ -4,11 +4,7 @@ export interface SubjectDetailPageProps {
     subject: bangumi_api.Subject
 }
 
-const SubjectDetailPage: React.FC<SubjectDetailPageProps> = ({
-    subject
-}) => {
+export default ({ subject }: SubjectDetailPageProps) => {
     return <>
     </>;
 }
-
-export default SubjectDetailPage;

@@ -17,7 +17,7 @@ export interface SubjectTitleProps {
     showNameCN: boolean
 }
 
-export default ({ subject, showNameCN = false }: SubjectTitleProps) => {
+export default function SubjectTitle({ subject, showNameCN = false }: SubjectTitleProps) {
     const [tag, setTag] = useState("");
     GetSubjectTypeName(subject).then(setTag);
 
@@ -32,5 +32,9 @@ export default ({ subject, showNameCN = false }: SubjectTitleProps) => {
                 {subject.rank && <Tag color="blue">RANK {subject.rank}</Tag>}
             </div>
         </div>
-    )
+    );
 }
+
+SubjectTitle.defaultProps = {
+    showNameCN: false
+};

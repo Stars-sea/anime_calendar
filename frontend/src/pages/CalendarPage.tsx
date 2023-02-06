@@ -1,16 +1,36 @@
 import { SettingOutlined } from "@ant-design/icons";
 import { Button, Drawer, DrawerProps, Tabs, TabsProps, theme } from "antd";
-import React, { useState } from "react";
+import { useState } from "react";
 import StickyBox from "react-sticky-box";
+import SettingsPage from "./SettingsPage";
 import TimelinePage from "./TimelinePage";
 
 const weekdaysInJs = Array.from("1234560");
 
-const settingsButton = (
-    <Button shape="circle" style={{ margin: "0px 16px" }} icon={<SettingOutlined />} />
-);
+interface SettingsButtonProps {
+    showOnDrawer: (props: DrawerProps) => void
+}
 
-const CalendarPage: React.FC = () => {
+const SettingsButton: React.FC<SettingsButtonProps> = ({ showOnDrawer }) => {
+    function onClick() {
+        showOnDrawer({
+            title: "Settings",
+            children: <SettingsPage />
+        })
+    }
+
+    return (
+        <Button
+            shape="circle"
+            onClick={e => onClick()}
+            style={{ margin: "0px 16px" }}
+            icon={<SettingOutlined />}
+        />
+    );
+};
+
+
+export default () => {
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [drawerProps, setDrawerProps] = useState<DrawerProps>();
 
@@ -41,9 +61,9 @@ const CalendarPage: React.FC = () => {
             defaultActiveKey={new Date().getDay().toString()}
             style={{ height: "100%" }}
             centered destroyInactiveTabPane
-            tabBarExtraContent={settingsButton}
             renderTabBar={renderTabBar}
             items={tabs}
+            tabBarExtraContent={<SettingsButton showOnDrawer={showDrawer} />}
         />
 
         <Drawer
@@ -52,5 +72,3 @@ const CalendarPage: React.FC = () => {
         />
     </>;
 };
-
-export default CalendarPage;

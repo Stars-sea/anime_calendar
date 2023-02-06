@@ -1,9 +1,9 @@
 import { ConfigProvider, theme } from "antd";
 import { ThemeConfig } from "antd/es/config-provider";
-import React, { useState } from "react";
+import { useState } from "react";
 import CalendarPage from "./pages/CalendarPage";
 
-const App: React.FC = () => {
+export default () => {
     const [inited, setInited] = useState(false);
     const [themeConfig, setThemeConfig] = useState<ThemeConfig>({
         algorithm: theme.compactAlgorithm
@@ -31,5 +31,3 @@ const App: React.FC = () => {
         </ConfigProvider>
     );
 };
-
-export default App;
