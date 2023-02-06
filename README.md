@@ -8,6 +8,8 @@ React 控件库: [Ant Design](https://ant.design/)
 使用的 API: [Bangumi API](https://github.com/bangumi/api)  
 API 文档: <https://bangumi.github.io/api/>
 
+应用程序图标来自 [@Lusiro - iconfont](https://www.iconfont.cn/user/detail?uid=46101&nid=f13abJwF2nW9)
+
 ## Develop
 
 依赖:
