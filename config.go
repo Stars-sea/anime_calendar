@@ -7,6 +7,7 @@ import (
 
 type AppConfig struct {
 	BangumiUsername string `json:"bangumi_username"`
+	FilterAnime     bool   `json:"filter_anime"`
 }
 
 func (c *AppConfig) Save(path string) error {

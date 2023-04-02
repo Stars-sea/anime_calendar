@@ -74,7 +74,7 @@ func (b *BangumiApi) GetUser(username string) (*User, error) {
 
 	var user User
 	err = json.Unmarshal(data, &user)
-	if err != nil {
+	if err != nil || user.Username == "" {
 		return nil, err
 	}
 	return &user, err
