@@ -95,12 +95,11 @@ export default () => {
     const [user, setUser] = useState<bangumi_api.User | null>(null);
     const [loading, setLoading] = useState(true);
     useEffect(() => {
-        const initUser = async () => {
+        (async () => {
             const name = (await GetAppConfig()).bangumi_username;
             setUser(await GetUser(name));
             setLoading(false)
-        }
-        initUser();
+        })();
     }, []);
 
     const logout = () => {

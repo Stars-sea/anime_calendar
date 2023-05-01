@@ -1,6 +1,7 @@
 import { Card, Divider, Space, Switch } from "antd";
 import { useEffect, useState } from "react";
 import { GetAppConfig, SetAppConfig } from "../../wailsjs/go/main/App";
+import AppInfoSection from "../components/AppInfoSection";
 import UserSettingSection from "../components/UserSettingSection";
 
 export default () => {
@@ -20,11 +21,15 @@ export default () => {
     return <>
         <UserSettingSection />
         <Divider />
+
         <Card hoverable>
             <Space>
                 过滤未收藏番剧
                 <Switch checked={filterAnime} onClick={onChecked} />
             </Space>
         </Card>
+        <Divider />
+
+        <AppInfoSection />
     </>;
 }
