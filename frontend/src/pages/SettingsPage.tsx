@@ -1,21 +1,20 @@
 import { Card, Divider, Space, Switch } from "antd";
-import { useEffect, useState } from "react";
-import { GetAppConfig, SetAppConfig } from "../../wailsjs/go/main/App";
+import { useContext } from "react";
+import { config } from "../../wailsjs/go/models";
+import { AppConfigContext } from "../App";
 import AppInfoSection from "../components/AppInfoSection";
 import UserSettingSection from "../components/UserSettingSection";
 
-export default () => {
-    const [filterAnime, setFilterAnime] = useState(false)
-    useEffect(() => {
-        GetAppConfig().then(config => setFilterAnime(config.filter_anime));
-    }, []);
+interface SettingsPageProps {
+    updateConfig: (config: config.AppConfig) => void
+}
+
+export default ({ updateConfig }: SettingsPageProps) => {
+    const appconfig = useContext(AppConfigContext);
 
     const onChecked = async (filter_anime: boolean) => {
-        setFilterAnime(filter_anime);
-        
-        const originConfig = await GetAppConfig();
-        const config = {...originConfig, filter_anime};
-        await SetAppConfig(config);
+        if (!appconfig) throw "Config undefined";
+        updateConfig({...appconfig, filter_anime});
     }
 
     return <>
@@ -25,7 +24,7 @@ export default () => {
         <Card hoverable>
             <Space>
                 过滤未收藏番剧
-                <Switch checked={filterAnime} onClick={onChecked} />
+                <Switch checked={appconfig?.filter_anime} onClick={onChecked} />
             </Space>
         </Card>
         <Divider />

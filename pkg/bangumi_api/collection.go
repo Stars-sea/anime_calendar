@@ -2,12 +2,19 @@ package bangumi_api
 
 import "fmt"
 
-type UsersCollection struct {
-	OnHold  int `json:"on_hold,omitempty"`
-	Dropped int `json:"dropped,omitempty"`
-	Wish    int `json:"wish,omitempty"`
-	Collect int `json:"collect,omitempty"`
-	Doing   int `json:"doing,omitempty"`
+type UserCollectionSummary struct {
+	OnHold  uint `json:"on_hold,omitempty"`
+	Dropped uint `json:"dropped,omitempty"`
+	Wish    uint `json:"wish,omitempty"`
+	Collect uint `json:"collect,omitempty"`
+	Doing   uint `json:"doing,omitempty"`
+}
+
+type UserCollectionQueryResult struct {
+	Total  uint       `json:"total"`
+	Limit  byte       `json:"limit"`  // Range [1, 50]
+	Offset uint       `json:"offset"` // Subject count, not page index
+	Data   []*Subject `json:"data"`
 }
 
 // ---------- Collection Type ----------
@@ -19,7 +26,7 @@ type UsersCollection struct {
 5 = 抛弃
 */
 
-var collectionTypeNameMap = map[int]string{
+var collectionTypeNameMap = map[byte]string{
 	1: "想看",
 	2: "看过",
 	3: "在看",
@@ -27,7 +34,7 @@ var collectionTypeNameMap = map[int]string{
 	5: "抛弃",
 }
 
-func GetCollectionTypeName(ctype int) (string, error) {
+func GetCollectionTypeName(ctype byte) (string, error) {
 	if name, ok := collectionTypeNameMap[ctype]; ok {
 		return name, nil
 	}

@@ -1,6 +1,9 @@
 package network
 
-import "time"
+import (
+	"sync"
+	"time"
+)
 
 type cache struct {
 	MicroTimeStamp int64
@@ -23,12 +26,10 @@ func (c *cache) ComputeDuration(now int64) int64 {
 
 const maxSizeInBytes = 10000000 // 10 Mb
 
-var cacheMap = make(map[string]cache)
+var cacheMap = sync.Map{}
 
 func ClearCache() {
-	for k := range cacheMap {
-		delete(cacheMap, k)
-	}
+	cacheMap = sync.Map{}
 }
 
 func StartCacheReleaseTicker() *time.Ticker {
@@ -42,18 +43,18 @@ func StartCacheReleaseTicker() *time.Ticker {
 	return ticker
 }
 
-func put(key string, data []byte) bool {
+func SetCache(key string, data []byte) bool {
 	if len(data) > maxSizeInBytes {
 		return false
 	}
 
-	cacheMap[key] = *newCache(data)
+	cacheMap.Store(key, *newCache(data))
 	return true
 }
 
-func get(key string) ([]byte, bool) {
-	if c, ok := cacheMap[key]; ok {
-		return c.Data, true
+func GetCache(key string) ([]byte, bool) {
+	if c, ok := cacheMap.Load(key); ok {
+		return c.(cache).Data, true
 	}
 
 	return nil, false

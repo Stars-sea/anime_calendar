@@ -4,7 +4,7 @@ import "fmt"
 
 type User struct {
 	ID        int     `json:"id"`
-	UserGroup int     `json:"user_group"`
+	UserGroup byte    `json:"user_group"`
 	Username  string  `json:"username"`
 	Nickname  string  `json:"nickname"`
 	Sign      string  `json:"sign"`

@@ -1,15 +1,16 @@
 import { Tooltip } from "antd";
 import { BrowserOpenURL } from "../../wailsjs/runtime/runtime";
 
-export interface ClickableTitleProps {
+export interface URLTextProps {
     text: string,
     url: string,
     tooltip?: string,
-    direct?: boolean
+    direct?: boolean,
+    className?: string
 }
 
-export default ({ text, url, tooltip, direct }: ClickableTitleProps) => (
-    <Tooltip title={tooltip}>
+export default ({ text, url, tooltip, direct, className }: URLTextProps) => (
+    <Tooltip title={tooltip} className={className}>
         <span onClick={e => (direct || e.ctrlKey) && BrowserOpenURL(url)}
             style={{ "color": direct ? "#1668dc" : "	#ffffffd9"}}>
             {text}

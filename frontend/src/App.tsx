@@ -1,10 +1,14 @@
 import { ConfigProvider, theme } from "antd";
 import { ThemeConfig } from "antd/es/config-provider";
-import { useState } from "react";
+import { createContext, useEffect, useState } from "react";
+import { GetAppConfig, SaveAppConfig } from "../wailsjs/go/main/App";
+import { config } from "../wailsjs/go/models";
 import CalendarPage from "./pages/CalendarPage";
 
+export const AppConfigContext = createContext<config.AppConfig | undefined>(undefined); 
+
 export default () => {
-    const [inited, setInited] = useState(false);
+    const [appconfig, setAppconfig] = useState<config.AppConfig>();
     const [themeConfig, setThemeConfig] = useState<ThemeConfig>({
         algorithm: theme.compactAlgorithm
     });
@@ -20,14 +24,22 @@ export default () => {
     const themeMedia = window.matchMedia("(prefers-color-scheme: light)");
     themeMedia.addEventListener("change", e => setTheme(e.matches));
 
-    if (!inited) {
+    useEffect(() => {
         setTimeout(() => setTheme(themeMedia.matches), 100);
-        setInited(true);
-    }
+
+        (async () => {
+            setAppconfig(await GetAppConfig());
+        })();
+    }, []);
+
+    useEffect(() => {(async () => {
+        if (appconfig) SaveAppConfig(appconfig);
+    })()}, [appconfig]);
     
-    return (
+    
+    return <AppConfigContext.Provider value={appconfig}>
         <ConfigProvider theme={themeConfig}>
-            <CalendarPage />
+            <CalendarPage updateConfig={config => setAppconfig(config)} />
         </ConfigProvider>
-    );
+    </AppConfigContext.Provider>;
 };

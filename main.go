@@ -14,7 +14,7 @@ var assets embed.FS
 
 func main() {
 	// Create an instance of the app structure
-	app := NewApp()
+	app := GetApp()
 	api := bangumi_api.NewBangumiApi()
 	helper := bangumi_api.NewStructureHelper()
 

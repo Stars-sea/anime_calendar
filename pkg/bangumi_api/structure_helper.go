@@ -11,7 +11,7 @@ func (h *StructureHelper) GetSubjectTypeName(s *Subject) (string, error) {
 	return s.GetTypeName()
 }
 
-func (h *StructureHelper) GetCollectionTypeName(ctype int) (string, error) {
+func (h *StructureHelper) GetCollectionTypeName(ctype byte) (string, error) {
 	return GetCollectionTypeName(ctype)
 }
 

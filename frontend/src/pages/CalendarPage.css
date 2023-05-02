@@ -1,0 +1,18 @@
+.ant-drawer-body {
+    overflow-y: overlay;
+}
+
+.ant-drawer-body::-webkit-scrollbar {
+    width: 8px;
+    height: 100%;
+    background-color: transparent;
+}
+
+.ant-drawer-body::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.ant-drawer-body::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
