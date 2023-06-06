@@ -1,6 +1,7 @@
 package network
 
 import (
+	"errors"
 	"io"
 	"net/http"
 	"regexp"
@@ -14,9 +15,9 @@ const user_agent = "Stars-sea/anime_calendar"
 //
 // ---------- Request ----------
 
-var tokenPattern = regexp.MustCompile("(?i)^[A-Za-z0-9]+$")
+var tokenPattern = regexp.MustCompile("(?i)^[a-z0-9]{40}$")
 
-func Get(url string, withToken bool) (*http.Response, error) {
+func Get(url string, token *string) (*http.Response, error) {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, err
@@ -25,24 +26,33 @@ func Get(url string, withToken bool) (*http.Response, error) {
 	req.Header.Add("User-Agent", user_agent)
 	req.Header.Add("Accept", "application/json")
 
-	if !withToken {
-		return http.DefaultClient.Do(req)
-	}
-
 	// Add token
-	appconfig, err := config.LoadDefaultAppConfig()
-	if err == nil && tokenPattern.MatchString(appconfig.BangumiToken) {
-		req.Header.Add("Authorization", "Bearer "+appconfig.BangumiToken)
+	if token != nil {
+		if tokenPattern.MatchString(*token) {
+			req.Header.Add("Authorization", "Bearer "+*token)
+		} else {
+			return nil, errors.New("Invaild token format")
+		}
 	}
 	return http.DefaultClient.Do(req)
 }
 
-func GetWithoutToken(url string) (*http.Response, error) {
-	return Get(url, false)
+func GetAutomatically(url string) (*http.Response, error) {
+	token := getToken()
+
+	resp, err := Get(url, token)
+	if token != nil && err != nil {
+		resp, err = Get(url, nil)
+	}
+
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
 }
 
-func GetContent(url string, withToken bool) ([]byte, error) {
-	resp, err := Get(url, withToken)
+func GetContent(url string, token *string) ([]byte, error) {
+	resp, err := Get(url, token)
 	if err != nil {
 		return nil, err
 	}
@@ -52,17 +62,13 @@ func GetContent(url string, withToken bool) ([]byte, error) {
 	return io.ReadAll(resp.Body)
 }
 
-func GetContentWithoutToken(url string) ([]byte, error) {
-	return GetContent(url, false)
-}
-
-func GetContentFromCache(url string, withToken bool) ([]byte, error) {
+func GetContentFromCache(url string, token *string) ([]byte, error) {
 	// Try to get cache
 	if data, ok := GetCache(url); ok {
 		return data, nil
 	}
 
-	data, err := GetContent(url, withToken)
+	data, err := GetContent(url, token)
 	if err != nil {
 		return nil, err
 	}
@@ -72,13 +78,23 @@ func GetContentFromCache(url string, withToken bool) ([]byte, error) {
 }
 
 func GetContentAutomatically(url string) ([]byte, error) {
-	data, err := GetContentFromCache(url, true)
-	if err != nil {
-		data, err = GetContentFromCache(url, false)
+	token := getToken()
+
+	data, err := GetContentFromCache(url, token)
+	if token != nil && err != nil {
+		data, err = GetContentFromCache(url, nil)
 	}
 
 	if err != nil {
 		return nil, err
 	}
 	return data, nil
+}
+
+func getToken() *string {
+	appconfig, err := config.LoadDefaultAppConfig()
+	if err != nil {
+		return nil
+	}
+	return appconfig.BangumiToken
 }

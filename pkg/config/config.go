@@ -15,9 +15,9 @@ func GetDefaultConfigPath() (string, error) {
 }
 
 type AppConfig struct {
-	BangumiUsername string `json:"bangumi_username"`
-	BangumiToken    string `json:"bangumi_token"` // https://next.bgm.tv/demo/access-token
-	FilterAnime     bool   `json:"filter_anime"`
+	BangumiUsername string  `json:"bangumi_username"`
+	BangumiToken    *string `json:"bangumi_token,omitempty"` // https://next.bgm.tv/demo/access-token
+	FilterAnime     bool    `json:"filter_anime"`
 }
 
 func (c *AppConfig) Save(path string) error {

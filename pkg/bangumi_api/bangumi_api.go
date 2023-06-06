@@ -3,6 +3,7 @@ package bangumi_api
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 
 	"github.com/Stars-sea/anime_calendar/pkg/bangumi_api/network"
 )
@@ -31,7 +32,7 @@ func (b *BangumiApi) ClearCache() {
 
 // https://bangumi.github.io/api/#/%E6%9D%A1%E7%9B%AE/getCalendar
 func (b *BangumiApi) Calendar() ([]*CalendarRoot, error) {
-	data, err := network.GetContentFromCache(calendar_url, false)
+	data, err := network.GetContentFromCache(calendar_url, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -63,7 +64,10 @@ func (b *BangumiApi) GetFullSubjectInfo(s *Subject) (*Subject, error) {
 		return nil, err
 	}
 
-	json.Unmarshal(data, s)
+	err = unmarshalJson(data, s)
+	if err != nil {
+		return nil, err
+	}
 	return s, nil
 }
 
@@ -73,17 +77,39 @@ func (b *BangumiApi) GetFullSubjectInfo(s *Subject) (*Subject, error) {
 // https://bangumi.github.io/api/#/%E7%94%A8%E6%88%B7/getUserByName
 func (b *BangumiApi) GetUser(username string) (*User, error) {
 	url := fmt.Sprintf(user_info_url, username)
-	data, err := network.GetContentFromCache(url, false)
+	data, err := network.GetContentFromCache(url, nil)
 	if err != nil {
 		return nil, err
 	}
 
 	var user User
-	err = json.Unmarshal(data, &user)
-	if err != nil || user.Username == "" {
+	err = unmarshalJson(data, &user)
+	if err != nil {
 		return nil, err
 	}
 	return &user, err
+}
+
+func (b *BangumiApi) ValidUserAndToken(username string, token *string) (*network.ApiError, error) {
+	url := fmt.Sprintf(user_info_url, username)
+	resp, err := network.Get(url, token)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode == 200 {
+		return nil, nil
+	}
+
+	defer resp.Body.Close()
+
+	var apiErr network.ApiError
+	data, err := io.ReadAll(resp.Body)
+	if err == nil {
+		json.Unmarshal(data, &apiErr)
+		return &apiErr, nil
+	}
+	return nil, err
 }
 
 // https://bangumi.github.io/api/#/%E6%94%B6%E8%97%8F/getUserCollectionsByUsername
@@ -111,13 +137,13 @@ func (b *BangumiApi) GetUserCollections(
 		url = fmt.Sprintf("%s&%s", url, arg)
 	}
 
-	data, err := network.GetContentFromCache(url, true)
+	data, err := network.GetContentAutomatically(url)
 	if err != nil {
 		return nil, err
 	}
 
 	var result *UserCollectionQueryResult
-	err = json.Unmarshal(data, result)
+	err = unmarshalJson(data, result)
 	if err != nil {
 		return nil, err
 	}
@@ -127,13 +153,13 @@ func (b *BangumiApi) GetUserCollections(
 // https://bangumi.github.io/api/#/%E6%94%B6%E8%97%8F/getUserCollection
 func (b *BangumiApi) GetUserSingleCollection(username string, subject_id int) (*Subject, error) {
 	url := fmt.Sprintf(user_single_collection_url, username, subject_id)
-	data, err := network.GetContentFromCache(url, true)
+	data, err := network.GetContentAutomatically(url)
 	if err != nil {
 		return nil, err
 	}
 
 	var subject *Subject
-	err = json.Unmarshal(data, subject)
+	err = unmarshalJson(data, subject)
 	if err != nil {
 		return nil, err
 	}
@@ -142,20 +168,33 @@ func (b *BangumiApi) GetUserSingleCollection(username string, subject_id int) (*
 
 func (b *BangumiApi) IsUserCollected(username string, subject_id int) bool {
 	url := fmt.Sprintf(user_single_collection_url, username, subject_id)
+	key := fmt.Sprintf("METADATA [%s]", url)
 
-	if result, ok := network.GetCache(url); ok {
+	if result, ok := network.GetCache(key); ok {
 		return bytes2Bool(result)
 	}
 
-	resp, err := network.Get(url, true)
+	resp, err := network.GetAutomatically(url)
 
 	result := err == nil && resp.StatusCode == 200
-	network.SetCache(fmt.Sprintf("raw %s", url), bool2Bytes(result))
+	network.SetCache(key, bool2Bytes(result))
 	return result
 }
 
 //
 // ---------- Tool Functions ----------
+
+func unmarshalJson(data []byte, v any) error {
+	err := json.Unmarshal(data, v)
+	if err != nil {
+		var apiErr network.ApiError
+		if json.Unmarshal(data, &apiErr) == nil {
+			return &apiErr
+		}
+		return err
+	}
+	return nil
+}
 
 // Go 不支持三元运算符, 操蛋
 func bool2Bytes(value bool) []byte {

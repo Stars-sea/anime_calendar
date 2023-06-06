@@ -18,7 +18,7 @@ export default ({ updateConfig }: SettingsPageProps) => {
     }
 
     return <>
-        <UserSettingSection />
+        <UserSettingSection updateConfig={updateConfig} />
         <Divider />
 
         <Card hoverable>

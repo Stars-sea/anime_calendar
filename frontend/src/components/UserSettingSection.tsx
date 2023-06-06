@@ -1,71 +1,63 @@
 import { CheckOutlined, KeyOutlined, LogoutOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Skeleton } from "antd";
 import { ValidateStatus } from "antd/es/form/FormItem";
-import React, { useEffect, useState } from "react";
-import { GetUser } from "../../wailsjs/go/bangumi_api/BangumiApi";
-import { GetAppConfig, SaveAppConfig } from "../../wailsjs/go/main/App";
+import React, { useContext, useEffect, useState } from "react";
+import { GetUser, ValidUserAndToken } from "../../wailsjs/go/bangumi_api/BangumiApi";
 import { bangumi_api, config } from "../../wailsjs/go/models";
+import { AppConfigContext } from "../App";
 import URLText from "./URLText";
 import UserCard from "./UserCard";
 import "./UserSettingSection.css";
 
 interface Validation {
     validateStatus: ValidateStatus,
-    errorMessage: string | null
+    errorMessage?: string
 }
 
-const validUser = async (username: string): Promise<Validation> => {
+async function validUserAndToken(username: string, token?: string): Promise<Validation> {
     try {
-        const user = await GetUser(username);
-        if (user === null) throw "Get null user data";
-        return {
-            validateStatus: "success",
-            errorMessage: null
-        }
+        const apiErr = await ValidUserAndToken(username, token === '' ? undefined : token);
+        if (apiErr === null)
+            return { validateStatus: "success" };
+        else return {
+            validateStatus: "error",
+            errorMessage: `${apiErr.title}: ${apiErr.description}`
+        };
     } catch (error) {
-        console.error(error);
         return {
             validateStatus: "error",
-            errorMessage: "获取用户信息错误"
-        }
+            errorMessage: `Unknown error (${error})`
+        };
     }
 }
 
 interface SettingFormProps {
-    onSubmit: (username: bangumi_api.User) => void
+    onSubmit: () => void,
+    updateConfig: (config: config.AppConfig) => void
 }
 
-const SettingForm: React.FC<SettingFormProps> = ({ onSubmit }) => {
-    const [form] = Form.useForm();
-    const [validation, setValidation] = useState<Validation>({
-        validateStatus: "",
-        errorMessage: null
-    });
+const SettingForm: React.FC<SettingFormProps> = ({ onSubmit, updateConfig }) => {
+    const [form] = Form.useForm<config.AppConfig>();
+    const appconfig = useContext(AppConfigContext);
+    const [validation,  setValidation]  = useState<Validation>({ validateStatus: "" });
 
-    useEffect(() => { GetAppConfig().then(form.setFieldsValue); }, []);
 
     const onCheck = async () => {
-        setValidation({
-            validateStatus: "validating",
-            errorMessage: null
-        });
+        setValidation({ validateStatus: "validating" });
 
-        const { bangumi_username } = form.getFieldsValue();
-        setValidation(await validUser(bangumi_username));
+        const { bangumi_username, bangumi_token } = form.getFieldsValue();
+        const result = await validUserAndToken(bangumi_username, bangumi_token);
+        setValidation(result);
 
         await form.validateFields();
-        form.submit();
+        if (result.validateStatus === "success")
+            form.submit();
     }
 
     const onFinish = async (values: config.AppConfig) => {
-        const bangumi_username = values.bangumi_username;
-        const bangumi_token    = values.bangumi_token;
-        onSubmit(await GetUser(bangumi_username));
-
-        // Save config
-        const originConfig = await GetAppConfig();
-        const config = {...originConfig, bangumi_username, bangumi_token};
-        await SaveAppConfig(config);
+        const filter_anime = appconfig ? appconfig.filter_anime : false;
+        updateConfig({...values, filter_anime});
+        onSubmit();
     }
 
     return <Form
@@ -73,17 +65,18 @@ const SettingForm: React.FC<SettingFormProps> = ({ onSubmit }) => {
         form={form}
         onFinish={onFinish}
         autoComplete="off"
+        initialValues={appconfig}
         requiredMark={false}
     >
         <Form.Item required hasFeedback name="bangumi_username"
-            rules={[{ required: true, message: '请输入 Bangumi 用户名' }]}
-            validateStatus={validation.validateStatus} help={validation.errorMessage}>
+            validateStatus={validation.validateStatus} help={validation.errorMessage}
+            rules={[{ required: true, message: '请输入 Bangumi 用户名' }]}>
             <Input prefix={<UserOutlined />} placeholder="Bangumi username" />
         </Form.Item>
 
         <Form.Item name="bangumi_token" rules={[{
-            type: "string", pattern: /^[a-z0-9]{40}$/gi,
-            message: "Token 格式不对, 是否漏输?"
+                type: "string", pattern: /^[a-z0-9]{40}$/gi,
+                message: "Token 格式错误"
         }]}>
             <Input prefix={<KeyOutlined />} placeholder="Bangumi token (optional)" />
         </Form.Item>
@@ -100,28 +93,35 @@ const SettingForm: React.FC<SettingFormProps> = ({ onSubmit }) => {
     </Form>;
 }
 
-export default () => {
+
+interface UserSettingSectionProps {
+    updateConfig: (config: config.AppConfig) => void
+}
+
+export default ({ updateConfig }: UserSettingSectionProps) => {
+    const appconfig = useContext(AppConfigContext);
     const [user, setUser] = useState<bangumi_api.User | null>(null);
     const [loading, setLoading] = useState(true);
-    useEffect(() => {
-        (async () => {
-            const name = (await GetAppConfig()).bangumi_username;
-            setUser(await GetUser(name));
-            setLoading(false)
-        })();
-    }, []);
 
-    const logout = () => {
-        setUser(null);
-    }
+    const setUsername = async (username?: string) => {
+        setLoading(true);
+        try {
+            setUser(username ? await GetUser(username) : null);
+        } catch (error) {
+            console.error(error);
+        }
+        setLoading(false);
+    };
+
+    useEffect(() => { setUsername(appconfig?.bangumi_username) }, []);
 
     return (
         <Skeleton loading={loading} avatar active>{
             user == null ? (
-                <SettingForm onSubmit={setUser} />
+                <SettingForm onSubmit={() => setUsername(appconfig?.bangumi_username)} updateConfig={updateConfig} />
             ) : (
                 <UserCard user={user} actions={[
-                    <span onClick={logout}>
+                    <span onClick={() => setUsername()}>
                         <LogoutOutlined key="logout" style={{marginRight: 5}} />
                         Logout
                     </span>]}
