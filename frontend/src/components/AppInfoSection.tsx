@@ -1,15 +1,14 @@
 import { FileTextOutlined, GithubOutlined, SyncOutlined } from "@ant-design/icons";
 import { Card, Space, Tag } from "antd";
 import { version } from "../../package.json";
-import "./AppInfoSection.css";
 import URLText from "./URLText";
 
 const RepoTitle = () => <>
     <GithubOutlined />
 
-    <span className="title">
+    <span className="ml-1">
         <URLText url="https://github.com/Stars-sea" text="Stars-sea" direct />
-        <span className="slash"> / </span>
+        <span className="fill-gray-700"> / </span>
         <URLText url="https://github.com/Stars-sea/anime_calendar" text="anime_calendar" direct />
     </span>
 </>;

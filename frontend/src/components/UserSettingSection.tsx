@@ -7,7 +7,6 @@ import { bangumi_api, config } from "../../wailsjs/go/models";
 import { AppConfigContext } from "../App";
 import URLText from "./URLText";
 import UserCard from "./UserCard";
-import "./UserSettingSection.css";
 
 interface Validation {
     validateStatus: ValidateStatus,
@@ -82,11 +81,11 @@ const SettingForm: React.FC<SettingFormProps> = ({ onSubmit, updateConfig }) => 
         </Form.Item>
 
         <Form.Item>
-            <div className="submit_section">
+            <div className="flex justify-between ">
                 <Button type="primary" onClick={onCheck}>
                     <CheckOutlined /> 完成
                 </Button>
-                <URLText className="apply_token" text="没有 Token? 申请一个" direct
+                <URLText className="mx-0 my-auto " text="没有 Token? 申请一个" direct
                     url="https://next.bgm.tv/demo/access-token" />
             </div>
         </Form.Item>
@@ -122,7 +121,7 @@ export default ({ updateConfig }: UserSettingSectionProps) => {
             ) : (
                 <UserCard user={user} actions={[
                     <span onClick={() => setUsername()}>
-                        <LogoutOutlined key="logout" style={{marginRight: 5}} />
+                        <LogoutOutlined className="mr-1 " key="logout" />
                         Logout
                     </span>]}
                 />

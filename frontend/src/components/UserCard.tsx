@@ -20,7 +20,7 @@ export default ({ user: {
             avatar={<Avatar src={avatar?.medium} />}
             title={<>
                 <URLText url={`https://bgm.tv/user/${username}`} text={nickname} />
-                <span style={{fontSize: 13, color: "grey"}}> @{username}</span>
+                <span className="text-sm text-gray-500 "> @{username}</span>
             </>}
             description={sign === "" ? "此人还没有签名" : sign}
         />

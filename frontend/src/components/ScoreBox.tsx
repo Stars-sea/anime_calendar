@@ -8,7 +8,7 @@ export interface ScoreBoxProps {
 export default ({ score }: ScoreBoxProps) => (
     <span>
         {/* TODO: 解决 Rate 组件一整行上下跳动问题 */}
-        <Rate count={10} style={{ fontSize: 14, marginRight: 16 }}
+        <Rate className="mr-4 text-sm" count={10}
               defaultValue={score?.score} disabled allowHalf />
         {score?.score}
     </span>

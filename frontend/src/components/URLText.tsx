@@ -12,7 +12,7 @@ export interface URLTextProps {
 export default ({ text, url, tooltip, direct, className }: URLTextProps) => (
     <Tooltip title={tooltip} className={className}>
         <span onClick={e => (direct || e.ctrlKey) && BrowserOpenURL(url)}
-            style={{ "color": direct ? "#1668dc" : "	#ffffffd9"}}>
+            style={{ "color": direct ? "#1668dc" : "#ffffffd9"}}>
             {text}
         </span>
     </Tooltip>

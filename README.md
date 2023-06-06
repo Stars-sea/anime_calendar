@@ -5,6 +5,8 @@
 
 React 控件库: [Ant Design](https://ant.design/)
 
+CSS 框架: [Tailwind CSS](https://www.tailwindcss.cn/)
+
 使用的 API: [Bangumi API](https://github.com/bangumi/api)  
 API 文档: <https://bangumi.github.io/api/>
 

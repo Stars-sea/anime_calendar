@@ -24,9 +24,9 @@ const SettingsButton: React.FC<SettingsButtonProps> = ({ showOnDrawer, updateCon
 
     return (
         <Button
+            className="mx-4 my-0 "
             shape="circle"
             onClick={e => onClick()}
-            style={{ margin: "0px 16px" }}
             icon={<SettingOutlined />}
         />
     );
@@ -50,7 +50,7 @@ export default ({ updateConfig }: CalendarPageProps) => {
         token: { colorBgContainer },
     } = theme.useToken();
     const renderTabBar: TabsProps['renderTabBar'] = (props, DefaultTabBar) => (
-        <StickyBox offsetTop={0} offsetBottom={20} style={{ zIndex: 1, marginBottom: "-16px" }}>
+        <StickyBox offsetTop={0} offsetBottom={20} className="z-0 -mb-4">
             <DefaultTabBar {...props} style={{ background: colorBgContainer }} />
         </StickyBox>
     );
@@ -65,8 +65,8 @@ export default ({ updateConfig }: CalendarPageProps) => {
 
     return <>
         <Tabs
+            className="h-full"
             defaultActiveKey={new Date().getDay().toString()}
-            style={{ height: "100%" }}
             centered destroyInactiveTabPane
             renderTabBar={renderTabBar}
             items={tabs}

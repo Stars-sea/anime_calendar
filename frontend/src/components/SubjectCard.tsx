@@ -5,7 +5,6 @@ import React from "react";
 import { bangumi_api } from "../../wailsjs/go/models";
 import SubjectDetailPage from "../pages/SubjectDetailPage";
 import ScoreBox from "./ScoreBox";
-import "./SubjectCard.css";
 import SubjectTitle from "./SubjectTitle";
 
 export interface SubjectCardProps {
