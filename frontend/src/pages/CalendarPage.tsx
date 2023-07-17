@@ -2,7 +2,6 @@ import { SettingOutlined } from "@ant-design/icons";
 import { Button, Drawer, DrawerProps, Tabs, TabsProps, theme } from "antd";
 import { useState } from "react";
 import StickyBox from "react-sticky-box";
-import { config } from "../../wailsjs/go/models";
 import "./CalendarPage.css";
 import SettingsPage from "./SettingsPage";
 import TimelinePage from "./TimelinePage";
@@ -10,15 +9,14 @@ import TimelinePage from "./TimelinePage";
 const weekdaysInJs = Array.from("1234560");
 
 interface SettingsButtonProps {
-    showOnDrawer: (props: DrawerProps) => void,
-    updateConfig: (config: config.AppConfig) => void
+    showOnDrawer: (props: DrawerProps) => void
 }
 
-const SettingsButton: React.FC<SettingsButtonProps> = ({ showOnDrawer, updateConfig }) => {
+const SettingsButton: React.FC<SettingsButtonProps> = ({ showOnDrawer }) => {
     function onClick() {
         showOnDrawer({
             title: "Settings",
-            children: <SettingsPage updateConfig={updateConfig} />
+            children: <SettingsPage />
         })
     }
 
@@ -33,11 +31,7 @@ const SettingsButton: React.FC<SettingsButtonProps> = ({ showOnDrawer, updateCon
 };
 
 
-interface CalendarPageProps {
-    updateConfig: (config: config.AppConfig) => void
-}
-
-export default ({ updateConfig }: CalendarPageProps) => {
+export default () => {
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [drawerProps, setDrawerProps] = useState<DrawerProps>();
 
@@ -71,7 +65,7 @@ export default ({ updateConfig }: CalendarPageProps) => {
             renderTabBar={renderTabBar}
             items={tabs}
             tabBarExtraContent={
-                <SettingsButton showOnDrawer={showDrawer} updateConfig={updateConfig} />
+                <SettingsButton showOnDrawer={showDrawer} />
             }
         />
 

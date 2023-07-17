@@ -6,6 +6,12 @@ import (
 	"path"
 )
 
+const (
+	AppThemeAuto = iota
+	AppThemeLight
+	AppThemeDark
+)
+
 func GetDefaultConfigPath() (string, error) {
 	pwd, err := os.Getwd()
 	if err != nil {
@@ -15,9 +21,9 @@ func GetDefaultConfigPath() (string, error) {
 }
 
 type AppConfig struct {
-	BangumiUsername string  `json:"bangumi_username"`
-	BangumiToken    *string `json:"bangumi_token,omitempty"` // https://next.bgm.tv/demo/access-token
-	FilterAnime     bool    `json:"filter_anime"`
+	UserConfig  *UserConfig `json:"user_config,omitempty"`
+	FilterAnime bool        `json:"filter_anime"`
+	AppTheme    int         `json:"app_theme"`
 }
 
 func (c *AppConfig) Save(path string) error {

@@ -31,15 +31,13 @@ async function validUserAndToken(username: string, token?: string): Promise<Vali
 }
 
 interface SettingFormProps {
-    onSubmit: () => void,
-    updateConfig: (config: config.AppConfig) => void
+    onSubmit: (config: config.UserConfig) => void
 }
 
-const SettingForm: React.FC<SettingFormProps> = ({ onSubmit, updateConfig }) => {
-    const [form] = Form.useForm<config.AppConfig>();
-    const appconfig = useContext(AppConfigContext);
-    const [validation,  setValidation]  = useState<Validation>({ validateStatus: "" });
-
+const SettingForm: React.FC<SettingFormProps> = ({ onSubmit }) => {
+    const [form] = Form.useForm<config.UserConfig>();
+    const { appconfig } = useContext(AppConfigContext);
+    const [validation, setValidation] = useState<Validation>({ validateStatus: "" });
 
     const onCheck = async () => {
         setValidation({ validateStatus: "validating" });
@@ -53,18 +51,12 @@ const SettingForm: React.FC<SettingFormProps> = ({ onSubmit, updateConfig }) => 
             form.submit();
     }
 
-    const onFinish = async (values: config.AppConfig) => {
-        const filter_anime = appconfig ? appconfig.filter_anime : false;
-        updateConfig({...values, filter_anime});
-        onSubmit();
-    }
-
     return <Form
         name="user_setting"
         form={form}
-        onFinish={onFinish}
+        onFinish={onSubmit}
         autoComplete="off"
-        initialValues={appconfig}
+        initialValues={appconfig?.user_config}
         requiredMark={false}
     >
         <Form.Item required hasFeedback name="bangumi_username"
@@ -74,8 +66,8 @@ const SettingForm: React.FC<SettingFormProps> = ({ onSubmit, updateConfig }) => 
         </Form.Item>
 
         <Form.Item name="bangumi_token" rules={[{
-                type: "string", pattern: /^[a-z0-9]{40}$/gi,
-                message: "Token 格式错误"
+            type: "string", pattern: /^[a-z0-9]{40}$/gi,
+            message: "Token 格式错误"
         }]}>
             <Input prefix={<KeyOutlined />} placeholder="Bangumi token (optional)" />
         </Form.Item>
@@ -86,45 +78,46 @@ const SettingForm: React.FC<SettingFormProps> = ({ onSubmit, updateConfig }) => 
                     <CheckOutlined /> 完成
                 </Button>
                 <URLText className="mx-0 my-auto " text="没有 Token? 申请一个" direct
-                    url="https://next.bgm.tv/demo/access-token" />
+                         url="https://next.bgm.tv/demo/access-token" />
             </div>
         </Form.Item>
     </Form>;
 }
 
-
-interface UserSettingSectionProps {
-    updateConfig: (config: config.AppConfig) => void
-}
-
-export default ({ updateConfig }: UserSettingSectionProps) => {
-    const appconfig = useContext(AppConfigContext);
-    const [user, setUser] = useState<bangumi_api.User | null>(null);
+export default () => {
+    const { appconfig, updateConfig } = useContext(AppConfigContext);
+    const [user, setUser] = useState<bangumi_api.User>();
     const [loading, setLoading] = useState(true);
 
     const setUsername = async (username?: string) => {
         setLoading(true);
         try {
-            setUser(username ? await GetUser(username) : null);
+            setUser(username ? await GetUser(username) : undefined);
         } catch (error) {
             console.error(error);
         }
         setLoading(false);
     };
 
-    useEffect(() => { setUsername(appconfig?.bangumi_username) }, []);
+    useEffect(() => { setUsername(appconfig.user_config?.bangumi_username) }, []);
+
+    const updateUserConfig = (user_config: config.UserConfig) => {
+        setUsername(user_config.bangumi_username);
+        updateConfig({ user_config });
+        console.log(user_config);
+    }
 
     return (
         <Skeleton loading={loading} avatar active>{
-            user == null ? (
-                <SettingForm onSubmit={() => setUsername(appconfig?.bangumi_username)} updateConfig={updateConfig} />
-            ) : (
+            user ? (
                 <UserCard user={user} actions={[
                     <span onClick={() => setUsername()}>
                         <LogoutOutlined className="mr-1 " key="logout" />
                         Logout
                     </span>]}
                 />
+            ) : (
+                <SettingForm onSubmit={updateUserConfig} />
             )
         }</Skeleton>
     );

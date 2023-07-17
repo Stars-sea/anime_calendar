@@ -2,5 +2,7 @@ build/bin
 node_modules
 frontend/dist
 frontend/wailsjs/go
+frontend/package.json.md5
+frontend/package-lock.json
 
 appconfig.json

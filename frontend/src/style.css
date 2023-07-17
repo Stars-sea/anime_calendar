@@ -2,17 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@media (prefers-color-scheme: light) {
-    html {
-        background-color: #fff;
-    }
-}
-
-@media (prefers-color-scheme: dark) {
-    html {
-        background-color: #1e2025;
-    }
-}
 
 body {
     margin: 0;

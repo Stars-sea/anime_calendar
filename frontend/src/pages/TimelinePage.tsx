@@ -12,7 +12,7 @@ export interface TimelinePageProps {
 }
 
 export default ({ weekday, showOnDrawer }: TimelinePageProps) => {
-    const appconfig = useContext(AppConfigContext);
+    const { appconfig } = useContext(AppConfigContext);
     const [subjects, setSubjects] = useState<bangumi_api.Subject[]>();
     const [loading, setLoading] = useState<boolean>();
 
@@ -21,8 +21,8 @@ export default ({ weekday, showOnDrawer }: TimelinePageProps) => {
 
         let timeline = (await GetTimeline(weekday)).items;
 
-        if (appconfig && appconfig.filter_anime) {
-            const username = appconfig.bangumi_username;
+        if (appconfig.user_config && appconfig.filter_anime) {
+            const username = appconfig.user_config?.bangumi_username;
             const conditions = await Promise.all(
                 timeline.map(async s => await IsUserCollected(username, s.id))
             );
@@ -33,7 +33,7 @@ export default ({ weekday, showOnDrawer }: TimelinePageProps) => {
         setLoading(false);
     };
 
-    useEffect(() => { updateSubject() }, [appconfig?.filter_anime]);
+    useEffect(() => { updateSubject() }, [appconfig.filter_anime, appconfig.user_config]);
 
     return (
         <div className="subject_list">

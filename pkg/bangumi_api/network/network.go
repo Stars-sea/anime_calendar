@@ -96,5 +96,5 @@ func getToken() *string {
 	if err != nil {
 		return nil
 	}
-	return appconfig.BangumiToken
+	return appconfig.UserConfig.BangumiToken
 }
