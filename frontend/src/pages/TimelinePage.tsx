@@ -1,4 +1,4 @@
-import { DrawerProps, List } from "antd";
+import { List } from "antd";
 import { useContext, useEffect, useState } from "react";
 import { GetTimeline, IsUserCollected } from "../../wailsjs/go/bangumi_api/BangumiApi";
 import { bangumi_api } from "../../wailsjs/go/models";
@@ -7,11 +7,10 @@ import SubjectCard from "../components/SubjectCard";
 import "./TimelinePage.css";
 
 export interface TimelinePageProps {
-    weekday: number,
-    showOnDrawer?: (props: DrawerProps) => void
+    weekday: number
 }
 
-export default ({ weekday, showOnDrawer }: TimelinePageProps) => {
+export default ({ weekday }: TimelinePageProps) => {
     const { appconfig } = useContext(AppConfigContext);
     const [subjects, setSubjects] = useState<bangumi_api.Subject[]>();
     const [loading, setLoading] = useState<boolean>();
@@ -41,7 +40,7 @@ export default ({ weekday, showOnDrawer }: TimelinePageProps) => {
                 locale={{ "emptyText": "空空如也" }}
                 renderItem={s =>
                     <List.Item>
-                        <SubjectCard subject={s} showOnDrawer={showOnDrawer} />
+                        <SubjectCard subject={s} showOnDrawer />
                     </List.Item>
                 }
             />

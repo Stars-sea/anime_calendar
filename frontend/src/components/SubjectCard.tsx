@@ -1,8 +1,9 @@
-import { Avatar, Card, DrawerProps } from "antd";
+import { Avatar, Card } from "antd";
 import { CardSize } from "antd/es/card/Card";
 import Meta from "antd/es/card/Meta";
-import React from "react";
+import { useContext } from "react";
 import { bangumi_api } from "../../wailsjs/go/models";
+import { SideDrawerContext } from "../pages/CalendarPage";
 import SubjectDetailPage from "../pages/SubjectDetailPage";
 import ScoreBox from "./ScoreBox";
 import SubjectTitle from "./SubjectTitle";
@@ -12,16 +13,18 @@ export interface SubjectCardProps {
     image: "grid" | "small" | "medium" | "common" | "large",
 
     size: CardSize,
-    showOnDrawer?: (content: DrawerProps) => void
+    showOnDrawer?: boolean
 }
 
-export default function SubjectCard({ subject, image, size, showOnDrawer }: SubjectCardProps) {
-    function onClick(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
-        if (showOnDrawer == undefined) return;
-        showOnDrawer({
-            title: <SubjectTitle subject={subject} showNameCN={true} />,
-            children: <SubjectDetailPage subject={subject} />
-        });
+export default function SubjectCard({ subject, image, size, showOnDrawer: isShowOnDrawer }: SubjectCardProps) {
+    const { updateDrawerProps } = useContext(SideDrawerContext);
+
+    const onClick = () => {
+        if (isShowOnDrawer)
+            updateDrawerProps({
+                title: <SubjectTitle subject={subject} showNameCN={true} />,
+                children: <SubjectDetailPage subject={subject} />
+            });
     }
 
     return (

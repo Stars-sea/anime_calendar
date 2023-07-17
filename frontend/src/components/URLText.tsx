@@ -1,5 +1,4 @@
-import { ConfigProvider, Tooltip } from "antd";
-import { useContext } from "react";
+import { Tooltip, theme } from "antd";
 import { BrowserOpenURL } from "../../wailsjs/runtime/runtime";
 
 export interface URLTextProps {
@@ -11,15 +10,11 @@ export interface URLTextProps {
 }
 
 export default ({ text, url, tooltip, direct, className }: URLTextProps) => {
-    // TODO: Find a better way to get theme.
-    const { theme } = useContext(ConfigProvider.ConfigContext);
+    const { token: { colorLink, colorText } } = theme.useToken();
     
     return <Tooltip title={tooltip} className={className}>
         <span onClick={e => (direct || e.ctrlKey) && BrowserOpenURL(url)}
-            style={{ "color": direct 
-                ? theme?.token?.colorLink
-                : theme?.token?.colorText
-        }}>
+            style={{ "color": direct ? colorLink : colorText }}>
             {text}
         </span>
     </Tooltip>
