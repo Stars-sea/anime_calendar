@@ -13,7 +13,7 @@ interface AppConfigContextType {
 
 export const AppConfigContext = createContext<AppConfigContextType>({
     appconfig: new config.AppConfig(),
-    updateConfig(newConfig) { },
+    updateConfig(_) { },
 });
 
 export default () => {
@@ -50,8 +50,6 @@ export default () => {
             updateAppConfig(new config.AppConfig({...appconfig, ...newConfig}));
     }
 
-    themeMedia.addEventListener("change", updateTheme);
-
     // Sync config file
     useEffect(() => { (async () => {
         updateAppConfig(await GetAppConfig());
@@ -59,11 +57,12 @@ export default () => {
 
         setInited(true);
     })() }, []);
-
     useEffect(() => {(async () => {
         if (inited) await SaveAppConfig(appconfig);
     })()}, [appconfig]);
+
     useEffect(updateTheme, [appconfig.app_theme]);
+    themeMedia.addEventListener("change", updateTheme);
     
     return <AppConfigContext.Provider value={{appconfig, updateConfig}}>
         <ConfigProvider theme={themeConfig}>

@@ -23,6 +23,7 @@ func GetDefaultConfigPath() (string, error) {
 type AppConfig struct {
 	UserConfig  *UserConfig `json:"user_config,omitempty"`
 	FilterAnime bool        `json:"filter_anime"`
+	FilterNSFW  bool        `json:"filter_nsfw"`
 	AppTheme    int         `json:"app_theme"`
 }
 

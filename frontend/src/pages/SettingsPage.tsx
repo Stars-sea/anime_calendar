@@ -5,6 +5,7 @@ import AppInfoSection from "../components/AppInfoSection";
 import UserSettingSection from "../components/UserSettingSection";
 
 export default () => {
+    const [form] = Form.useForm();
     const { appconfig, updateConfig } = useContext(AppConfigContext);
 
     return <>
@@ -12,9 +13,16 @@ export default () => {
         <Divider />
 
         <Card hoverable>
-            <Form name="regular_config" initialValues={appconfig}>
+            <Form
+                form={form} 
+                name="regular_config"
+                initialValues={appconfig}
+                onFieldsChange={() => updateConfig(form.getFieldsValue())}>
                 <Form.Item label="过滤未收藏番剧" name="filter_anime" valuePropName="checked">
-                    <Switch onChange={c => updateConfig({ filter_anime: c })} />
+                    <Switch />
+                </Form.Item>
+                <Form.Item label="过滤 NSWF 内容" name="filter_nsfw" valuePropName="checked">
+                    <Switch />
                 </Form.Item>
                 <Form.Item label="应用程序主题" name="app_theme">
                     <Select onChange={v => updateConfig({ app_theme: v })}>

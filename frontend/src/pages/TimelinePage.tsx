@@ -1,6 +1,6 @@
 import { List } from "antd";
 import { useContext, useEffect, useState } from "react";
-import { GetTimeline, IsUserCollected } from "../../wailsjs/go/bangumi_api/BangumiApi";
+import { GetTimeline } from "../../wailsjs/go/bangumi_api/BangumiApi";
 import { bangumi_api } from "../../wailsjs/go/models";
 import { AppConfigContext } from "../App";
 import SubjectCard from "../components/SubjectCard";
@@ -15,24 +15,11 @@ export default ({ weekday }: TimelinePageProps) => {
     const [subjects, setSubjects] = useState<bangumi_api.Subject[]>();
     const [loading, setLoading] = useState<boolean>();
 
-    const updateSubject = async () => {
+    useEffect(() => { (async () => {
         setLoading(true);
-
-        let timeline = (await GetTimeline(weekday)).items;
-
-        if (appconfig.user_config && appconfig.filter_anime) {
-            const username = appconfig.user_config?.bangumi_username;
-            const conditions = await Promise.all(
-                timeline.map(async s => await IsUserCollected(username, s.id))
-            );
-            timeline = timeline.filter((_, i) => conditions[i]);
-        }
-
-        setSubjects(timeline);
+        setSubjects((await GetTimeline(weekday)).items);
         setLoading(false);
-    };
-
-    useEffect(() => { updateSubject() }, [appconfig.filter_anime, appconfig.user_config]);
+    })() }, [appconfig.filter_anime, appconfig.user_config, appconfig.filter_nsfw]);
 
     return (
         <div className="subject_list">

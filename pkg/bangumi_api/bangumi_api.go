@@ -4,8 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"sync"
 
 	"github.com/Stars-sea/anime_calendar/pkg/bangumi_api/network"
+	"github.com/Stars-sea/anime_calendar/pkg/config"
 )
 
 const (
@@ -50,7 +52,43 @@ func (b *BangumiApi) GetTimeline(day uint) (*CalendarRoot, error) {
 		return nil, err
 	}
 
-	return roots[day-1], nil
+	singleday := roots[day-1]
+
+	appconfig, err := config.LoadDefaultAppConfig()
+	if err != nil || (!appconfig.FilterAnime && !appconfig.FilterNSFW) {
+		return singleday, nil
+	}
+
+	syncgroup := &sync.WaitGroup{}
+	username := appconfig.UserConfig.BangumiUsername
+	collected := make(chan *Subject, 15)
+	for _, subject := range singleday.Subjects {
+		if appconfig.FilterNSFW && subject.NSFW {
+			continue
+		}
+		if appconfig.FilterAnime {
+			syncgroup.Add(1)
+			go func(s *Subject) {
+				defer syncgroup.Done()
+				if b.IsUserCollected(username, s.ID) {
+					collected <- s
+				}
+			}(subject)
+		} else {
+			collected <- subject
+		}
+	}
+
+	syncgroup.Wait()
+	close(collected)
+
+	filtered := singleday.Subjects[:0]
+	for subject := range collected {
+		filtered = append(filtered, subject)
+	}
+
+	singleday.Subjects = filtered
+	return singleday, nil
 }
 
 //

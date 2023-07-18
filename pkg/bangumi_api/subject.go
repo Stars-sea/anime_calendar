@@ -10,7 +10,7 @@ type Subject struct {
 	Name          string                 `json:"name"`
 	NameCN        string                 `json:"name_cn"`
 	Summary       string                 `json:"summary"`
-	Nsfw          bool                   `json:"nsfw"`
+	NSFW          bool                   `json:"nsfw"`
 	Locked        bool                   `json:"locked"`
 	Date          string                 `json:"date,omitempty"`
 	Platform      string                 `json:"platform"`

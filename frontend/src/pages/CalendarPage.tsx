@@ -33,7 +33,7 @@ interface SideDrawerProps {
     closeDrawer: () => void
 }
 
-export const SideDrawerContext = createContext<SideDrawerProps>({ updateDrawerProps(props) { }, closeDrawer() { } });
+export const SideDrawerContext = createContext<SideDrawerProps>({ updateDrawerProps(_) { }, closeDrawer() { } });
 
 export default () => {
     const [drawerOpen,  setDrawerOpen]  = useState(false);
@@ -52,13 +52,11 @@ export default () => {
         </StickyBox>
     );
 
-    const tabs = Array.from("一二三四五六日").map((w, i) => {
-        return {
-            label: `周${w}`,
-            key: weekdaysInJs[i],
-            children: <TimelinePage weekday={i + 1} />
-        };
-    });
+    const tabs = Array.from("一二三四五六日").map((w, i) => ({
+        label: `周${w}`,
+        key: weekdaysInJs[i],
+        children: <TimelinePage weekday={i + 1} />
+    }));
 
     return <SideDrawerContext.Provider value={{ updateDrawerProps, closeDrawer }}>
         <Tabs
