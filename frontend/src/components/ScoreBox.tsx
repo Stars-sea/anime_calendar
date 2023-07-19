@@ -5,10 +5,8 @@ export interface ScoreBoxProps {
     score?: bangumi_api.Score
 }
 
-export default ({ score }: ScoreBoxProps) => (
-    <span>
-        <Rate className="mr-4 text-sm" count={10}
-              defaultValue={score?.score} disabled allowHalf />
-        {score?.score}
-    </span>
-);
+export default ({ score }: ScoreBoxProps) =>
+    <div className="score-box">
+        <Rate className="mr-4 text-sm" count={10} value={score?.score} disabled allowHalf />
+        <span className="text-sm leading-5 align-middle text-zinc-500">{score?.score}</span>
+    </div>

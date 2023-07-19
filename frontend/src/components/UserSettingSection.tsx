@@ -104,7 +104,6 @@ export default () => {
     const updateUserConfig = (user_config: config.UserConfig) => {
         setUsername(user_config.bangumi_username);
         updateConfig({ user_config });
-        console.log(user_config);
     }
 
     return (

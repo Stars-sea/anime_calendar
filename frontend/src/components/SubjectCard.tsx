@@ -9,6 +9,7 @@ import ScoreBox from "./ScoreBox";
 import SubjectTitle from "./SubjectTitle";
 
 export interface SubjectCardProps {
+    className?: string,
     subject: bangumi_api.Subject,
     image: "grid" | "small" | "medium" | "common" | "large",
 
@@ -16,11 +17,11 @@ export interface SubjectCardProps {
     showOnDrawer?: boolean
 }
 
-export default function SubjectCard({ subject, image, size, showOnDrawer: isShowOnDrawer }: SubjectCardProps) {
+export default function SubjectCard({ className, subject, image, size, showOnDrawer }: SubjectCardProps) {
     const { updateDrawerProps } = useContext(SideDrawerContext);
 
     const onClick = () => {
-        if (isShowOnDrawer)
+        if (showOnDrawer)
             updateDrawerProps({
                 title: <SubjectTitle subject={subject} showNameCN={true} />,
                 children: <SubjectDetailPage subject={subject} />
@@ -28,7 +29,7 @@ export default function SubjectCard({ subject, image, size, showOnDrawer: isShow
     }
 
     return (
-        <Card size={size} onClick={onClick}>
+        <Card className={className} size={size} onClick={onClick}>
             <Meta
                 avatar={<Avatar shape="square" size="large" src={subject.images && subject.images[image]} />}
                 title={<SubjectTitle subject={subject} />}

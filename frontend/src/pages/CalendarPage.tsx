@@ -20,10 +20,10 @@ const SettingsButton = () => {
 
     return (
         <Button
-            className="mx-4 my-0 "
+            className="mx-4 my-0"
             shape="circle"
             onClick={onClick}
-            icon={<SettingOutlined />}
+            icon={<SettingOutlined className="mt-[3px] " />}
         />
     );
 };

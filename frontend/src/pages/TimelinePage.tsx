@@ -4,7 +4,6 @@ import { GetTimeline } from "../../wailsjs/go/bangumi_api/BangumiApi";
 import { bangumi_api } from "../../wailsjs/go/models";
 import { AppConfigContext } from "../App";
 import SubjectCard from "../components/SubjectCard";
-import "./TimelinePage.css";
 
 export interface TimelinePageProps {
     weekday: number
@@ -22,15 +21,13 @@ export default ({ weekday }: TimelinePageProps) => {
     })() }, [appconfig.filter_anime, appconfig.user_config, appconfig.filter_nsfw]);
 
     return (
-        <div className="subject_list">
-            <List grid={{ column: 1 }} dataSource={subjects} loading={loading}
-                locale={{ "emptyText": "空空如也" }}
-                renderItem={s =>
-                    <List.Item>
-                        <SubjectCard subject={s} showOnDrawer />
-                    </List.Item>
-                }
-            />
-        </div>
+        <List className="min-h-full pt-5"
+              grid={{ column: 1 }} dataSource={subjects} loading={loading}
+              locale={{ "emptyText": "啥也没有" }}
+              renderItem={s =>
+                <List.Item>
+                    <SubjectCard className="mx-4 " subject={s} showOnDrawer />
+                </List.Item>
+        }/>
     );
 }
