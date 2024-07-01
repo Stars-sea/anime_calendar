@@ -14,20 +14,25 @@ API 文档: <https://bangumi.github.io/api/>
 
 ## Develop
 
-依赖:
+关于 Wails 的使用, 参考[这个](https://wails.io/zh-Hans/docs/gettingstarted/installation/)
 
-* [Go 1.18+](https://golang.org)
-* [NPM (Node 15+)](https://nodejs.org)
+使用以下命令开始上手开发:
 
-克隆仓库后, 建议先运行 `go mod tidy` 检查 Golang 依赖
+```bash
+$ git clone https://github.com/Stars-sea/anime_calendar.git
+$ cd anime_calendar
+$ go mod tidy
 
-然后安装 Wails 命令行, 参考[这个](https://wails.io/zh-Hans/docs/gettingstarted/installation/)
+$ cd frontend
+$ npm i
+```
+
+---
 
 关于 Golang 与前端之间的代码同步, 可以使用 wails 命令行运行
 
 ```bash
 $ wails generate module
-# or
 $ wails dev
 ```
 
