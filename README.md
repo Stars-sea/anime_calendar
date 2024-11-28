@@ -1,3 +1,9 @@
+> 此仓库已被归档, Windows 平台请移步 [AnimeCalendar](https://github.com/Stars-sea/AnimeCalendar)
+> 
+> This repo is archived, please move to windows version: [AnimeCalendar](https://github.com/Stars-sea/AnimeCalendar)
+
+[![AnimeCalendar](https://github-readme-stats.vercel.app/api/pin/?username=Stars-sea&repo=AnimeCalendar)](https://github.com/Stars-sea/AnimeCalendar)
+
 # 📺 Anime Calendar
 
 使用 [Wails](https://github.com/wailsapp/wails) 构建的新番提醒程序  
